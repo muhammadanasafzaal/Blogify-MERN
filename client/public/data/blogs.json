@@ -1,0 +1,75 @@
+[
+    {
+        "id": 1,
+        "title": "Lenovo’s smarter devices stoke professional passions",
+        "category": "Electronics",
+        "author": "Foulcher Nathanil",
+        "author_img": "/images/author/1.png",
+        "about": "Foulcher is an award winning blog writer and novelist.",
+        "date": "2020-05-01",
+        "likes": 5,
+        "comments": 100,
+        "comment_list":[
+            {
+                "name":"Alex Juli",
+                "avatar":"/images/feedback/1.png",
+                "comment": "very nice",
+                "posted_on": "2020-04-03",
+                "updated_on": "2020-05-03",
+                "likes":5
+            },
+            {
+                "name":"Sarah Cole",
+                "avatar":"/images/feedback/2.png",
+                "comment": "goood",
+                "posted_on": "2020-03-03",
+                "updated_on": "2020-05-03",
+                "likes":0
+            }
+        ],
+        "cover": "/images/covers/blog1.jpg",
+        "excerpt": "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Perspiciatis tempora obcaecati error ipsum voluptatibus sed adipisci ut maiores nesciunt quam."
+    },
+    {
+        "id": 2,
+        "title": "Trending web & landing page designs in 2023",
+        "category": "Electronics",
+        "author": "Foulcher Nathanil",
+        "author_img": "/images/author/2.png",
+        "about": "Foulcher is an award winning blog writer and novelist.",
+        "date": "2020-05-09",
+        "likes": 15,
+        "comments": 90,
+        "comment_list":[],
+        "cover": "/images/covers/blog2.jpg",
+        "excerpt": "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Perspiciatis tempora obcaecati error ipsum voluptatibus sed adipisci ut maiores nesciunt quam."
+    },
+    {
+        "id": 3,
+        "title": "AI Revolution in 2023",
+        "category": "AI",
+        "author": "DB Parker",
+        "author_img": "/images/author/1.png",
+        "about": "Parker is an award winning blog writer and novelist.",
+        "date": "2020-03-09",
+        "likes": 24,
+        "comments": 60,
+        "comment_list":[],
+        "cover": "/images/covers/blog2.jpg",
+        "excerpt": "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Perspiciatis tempora obcaecati error ipsum voluptatibus sed adipisci ut maiores nesciunt quam."
+    },
+    {
+        "id": 4,
+        "title": "Blockchain Development boom",
+        "category": "Web3",
+        "author": "DB Parker",
+        "author_img": "/images/author/2.png",
+        "about": "Parker is an award winning blog writer and novelist.",
+        "date": "2020-03-09",
+        "likes": 124,
+        "comments": 160,
+        "comment_list":[],
+        "cover": "/images/covers/blog2.jpg",
+        "excerpt": "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Perspiciatis tempora obcaecati error ipsum voluptatibus sed adipisci ut maiores nesciunt quam."
+    }
+]
