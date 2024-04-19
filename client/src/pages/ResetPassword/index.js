@@ -5,6 +5,7 @@ import * as Yup from 'yup';
 import axios from 'axios';
 import { Link, Navigate, useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import axiosInstance from '../../util/axios';
 
 const validationSchema = Yup.object().shape({
     password: Yup.string().min(4, 'Password must be at least 4 characters').max(8, 'Password must not exceed 8 characters').required('Password is required'),
@@ -20,7 +21,7 @@ const initialValues = {
 
 const ResetPassword = () => {
 
-    let { token } = useParams();
+    let { access_token } = useParams();
 
     const api = process.env.REACT_APP_API_KEY
     const navigate = useNavigate()
@@ -38,10 +39,10 @@ const ResetPassword = () => {
 
     const handleSubmit = async (values) => {
       const data = {
-        token: token,
+        access_token: access_token,
         password: values.password
       }
-      const res = await axios.post(api+'auth/reset-password', data)
+      const res = await axiosInstance.post(api+'auth/reset-password', data)
       console.log(res)
       if(res && res.data.status_code == 200){
         toast.success(res.data.message, {

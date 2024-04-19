@@ -1,6 +1,18 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 
 const Footer = () => {
+    const [date, setDate] = useState(null)
+
+    const getDate = () => {
+        const date = new Date()
+        setDate(date.getFullYear())
+    }
+
+    useEffect(() => {
+        getDate()
+    }, [])
+    
+
     return (
         <footer id='footer'>
             <div className='container py-5'>
@@ -19,7 +31,7 @@ const Footer = () => {
                 </div>
                 <div className="row mt-3">
                     <div className="col-12 text-center">
-                        <small>Copyright 2023. Blogify All Rights Reserved.</small>
+                        <small>Copyright {date}. Blogify All Rights Reserved.</small>
                     </div>
                 </div>
             </div>

@@ -2,17 +2,25 @@ import {createSlice} from '@reduxjs/toolkit'
 
 const initialState = {
     blogs: [],
+    blogCategories:[]
 }
 
 export const BlogSlice = createSlice({
-    name: "Blog",
+    name: "blog",
     initialState,
     reducers: {
         allBlogs: (state, action) => {
-            state.hasToken = localStorage.getItem('token') ? true : false;
+            state.blogs = []
+        },
+        storeBlogCategories: (state, action) => {
+            if(action.payload.length){
+                action.payload.forEach(c => {
+                    state.blogCategories.push(c)
+                })
+            }
         },
     }
 })
 
-export const { allBlogs } = BlogSlice.actions
+export const { allBlogs, storeBlogCategories } = BlogSlice.actions
 export default BlogSlice.reducer

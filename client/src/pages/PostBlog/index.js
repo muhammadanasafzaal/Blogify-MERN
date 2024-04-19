@@ -3,7 +3,8 @@ import { useState, useEffect } from 'react'
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import axios from 'axios';
-
+import { useSelector } from "react-redux";
+import axiosInstance from '../../util/axios';
 
 const validationSchema = Yup.object().shape({
     title: Yup.string().min(3, 'title should be atleast 3 characters long').max(20, "title should not exceed 20 characters").required('title is required'),
@@ -48,28 +49,64 @@ const options = [
 const PostBlog = () => {
 
     const api = process.env.REACT_APP_API_KEY
+    const categories = useSelector((state) => state.blog.blogCategories)
 
     const [title, setTitle] = useState("")
     const [cover, setCover] = useState(null)
-    const [categories, setCategories] = useState(null)
+    // const [categories, setCategories] = useState(null)
     const [selectedCategories, setSelectedCategories] = useState([])
     const [content, setContent] = useState("")
 
-    const handleSubmit = (values) => {
-        console.log(values, 'data');
+    const handleSubmit = async (values) => {
+        if(selectedCategories.length){
+            values['categories'] = []
+            selectedCategories.forEach(c => {
+                values['categories'].push(c._id)
+            })
+            console.log(values)
+
+            const userId = JSON.parse(localStorage.getItem('user'))?.id
+            if(!userId){
+                return
+            }
+
+            let formData = new FormData()
+            for (const key in values) {
+                formData.append(key, values[key])
+            }
+            const headers = {
+              "Content-Type": "multipart/form-data",
+              "Authorization": localStorage.getItem('access_token')
+            }
+            const res = await axiosInstance.post(`${api}blogs/add-blog/${userId}`, formData)
+            
+            if(res){
+                console.log(res)
+            }
+            else{
+                console.log('failed')
+            }
+        }
     };
 
     const handleCategories = (e) => {
-        const idx = categories.indexOf(e.target.value)
-        if(idx == -1){
-            setSelectedCategories([...categories, e.target.value]);
+        const idx = categories.findIndex(c => {
+            return c._id === e.target.value;
+          });
+        if(idx != -1){
+            console.log(categories[idx])
+            const sidx = selectedCategories.findIndex(sc => {
+                return sc._id === categories[idx]._id
+            })
+            if(sidx === -1){
+                setSelectedCategories([...selectedCategories, categories[idx]]);
+            }
         }
     }
 
     const resetForm = () => {
         setTitle("")
         setCover(null)
-        setCategories([])
         setSelectedCategories([])
         setContent("")
     }
@@ -80,15 +117,8 @@ const PostBlog = () => {
         setSelectedCategories([...filteredCatg])
     }
 
-    const getBlogCategories = async () => {
-        const res = await axios.get(api+'blogs/categories')
-        setCategories([])
-        setCategories((prev)=>[...prev,...res.data.data])
-        console.log(categories)
-    }
-    
+
     useEffect(() => {
-        getBlogCategories()
         resetForm()
     }, [])
     
@@ -145,12 +175,15 @@ const PostBlog = () => {
                                         </select>
                                         { 
                                             selectedCategories?.length ?
-                                            <small>Selected Categories:</small>
+                                            <p>Selected Categories:</p>
                                             : ""
                                         }
                                         {selectedCategories?.map((item, index)=>{
                                             return(
-                                                <p key={index}>{item} <i className='fa fa-close' onClick={()=>handleDeleteCategory(item)}></i> </p>
+                                                <small className='d-block' key={index}>
+                                                    {item.name} 
+                                                    <i className='fa fa-close ml-2 mb-2' onClick={()=>handleDeleteCategory(item)}></i> 
+                                                </small>
                                             )
                                         })}
                                         {(!selectedCategories?.length) &&

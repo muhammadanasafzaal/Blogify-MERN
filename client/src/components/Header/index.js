@@ -1,15 +1,17 @@
 import React from 'react'
 import { Link } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-import { hasToken } from '../../store/generalSlice';
+import { hasToken, isLoading } from '../../store/generalSlice';
 
 const Header = () => {
 
     const dispatch = useDispatch()
 
     const logOut = () => {
-        localStorage.removeItem('token')
+        dispatch(isLoading(true))
         dispatch(hasToken(false))
+        dispatch(isLoading(false))
+        localStorage.clear()
     }
 
     return (

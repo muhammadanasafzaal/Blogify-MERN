@@ -8,6 +8,8 @@ import { toast } from 'react-toastify';
 import { useDispatch } from "react-redux";
 import { hasToken } from "../../store/generalSlice";
 import { useSelector } from "react-redux";
+import { isLoading } from '../../store/generalSlice'
+import axiosInstance from '../../util/axios';
 
 const validationSchema = Yup.object().shape({
     email: Yup.string().email('Invalid email').required('Email is required'),
@@ -32,20 +34,25 @@ const Login = () => {
     }
 
     const handleSubmit = async (values) => {
-        const res = await axios.post(api+'auth/login',values)
+        const res = await axiosInstance.post(api+'auth/login',values)
         console.log(res)
+        dispatch(isLoading(true))
         if(res && res.data.status_code == 200){
+            dispatch(isLoading(false))
             toast.success(res.data.message,{
                 theme:'colored',
                 autoClose: 2000
             });
-            localStorage.setItem('token', res.data.token)
+            localStorage.setItem('access_token', res.data['access_token'])
+            localStorage.setItem('refresh_token', res.data['refresh_token'])
+            localStorage.setItem('user', JSON.stringify(res.data.data))
             dispatch(hasToken(true))
             setTimeout(() => {
                 navigate('/')                
             }, 2000);
         }
         else{
+            dispatch(isLoading(false))
             toast.error(res.data.message,{
                 theme:'colored',
                 autoClose: 2000

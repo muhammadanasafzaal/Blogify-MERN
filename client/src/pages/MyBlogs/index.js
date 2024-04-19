@@ -1,13 +1,13 @@
-import React, { useState } from 'react'
+import React from 'react'
 import Blogs from '../Blogs'
 
 const MyBlogs = () => {
 
-    const [category, setCategory] = useState("")
+    const userId = JSON.parse(localStorage.getItem('user'))?.id
     
   return (
     <div>
-        <Blogs category={category} />
+        <Blogs userId={userId} />
     </div>
   )
 }

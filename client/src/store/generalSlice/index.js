@@ -2,6 +2,7 @@ import {createSlice} from '@reduxjs/toolkit'
 
 const initialState = {
     hasToken: false,
+    isLoading: false
 }
 
 export const generalSlice = createSlice({
@@ -11,8 +12,11 @@ export const generalSlice = createSlice({
         hasToken: (state, action) => {
             state.hasToken = action.payload
         },
+        isLoading: (state, action) => {
+            state.isLoading = action.payload
+        },
     }
 })
 
-export const { hasToken } = generalSlice.actions
+export const { hasToken, isLoading } = generalSlice.actions
 export default generalSlice.reducer

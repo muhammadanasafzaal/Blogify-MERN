@@ -1,17 +1,37 @@
 import React from 'react'
 import { useState, useEffect } from 'react'
 import axios from 'axios'
+import { useDispatch, useSelector } from 'react-redux'
+import GetCategoryName from '../../components/CategoryName'
+import FormatDate from '../../components/FormatDate'
+import { isLoading } from '../../store/generalSlice'
+import axiosInstance from '../../util/axios'
 
 const EditorsPick = () => {
+  const api = process.env.REACT_APP_API_KEY
 
   const [slides, setSlides] = useState([])
   const [slideCount, setSlideCount] = useState(0)
+  const [headers, setHeaders] = useState({
+    "Authorization": localStorage.getItem('access-token')
+  })
+
+  const categories = useSelector((state) => state.blog.blogCategories)
+  const dispatch = useDispatch()
 
   const getBlogsForSlides = async () => {
-    const res = await axios.get('/data/blogs.json')
-    if(res && res.data){
+    // const res = await axios.get('/data/blogs.json')
+    dispatch(isLoading(true))
+    console.log('blog for editor pick')
+    const res = await axiosInstance.get(`${api}blogs/${2}`)
+    if(res && res.data.data){
+      console.log('resp editor pick blog',res.data.data)
       setSlides([])
-      setSlides([...res.data])
+      setSlides([...res.data.data])
+      isLoading(false)
+    }
+    else{
+      dispatch(isLoading(false))
     }
   }
 
@@ -36,6 +56,7 @@ const EditorsPick = () => {
     }
   }
 
+
   useEffect(() => {
     getBlogsForSlides()
   }, [])
@@ -52,15 +73,25 @@ const EditorsPick = () => {
           <div className='row slide'>
             <div className='details border bg-light col-12 order-xs-2 p-4'>
               <div>
-                <span className='category-badge'>{slides[slideCount]?.category}</span>
+                {
+                  slides[slideCount]?.categories.map((item, index) => {
+                    return (
+                          <span className='category-badge mr-1' key={index}>
+                            <GetCategoryName catId={item} />
+                          </span>
+                        )
+                    })
+                }
                 <h4>{slides[slideCount]?.title}</h4>
                 <div>
                   <div>
-                    <img src={slides[slideCount]?.author_img} alt={slides[slideCount]?.title} className='author-img img-fluid'/>
+                    <img src={slides[slideCount]?.author.avatar ? api+slides[slideCount]?.author.avatar : api+"uploads/user.jpg"} alt={slides[slideCount]?.title} className='author-img img-fluid'/>
                   </div>
                   <div>
-                    <h5>{slides[slideCount]?.author}</h5>
-                    <small>{slides[slideCount]?.date}</small>
+                    <h6>{slides[slideCount]?.author.username}</h6>
+                    <small>
+                      <FormatDate createdDate={slides[slideCount]?.createdAt} />
+                    </small>
                   </div>
                 </div>
               </div>
@@ -70,7 +101,7 @@ const EditorsPick = () => {
               </div>
             </div>
             <div className='col-md-8 col-12 offset-md-4 order-xs-1 cover px-md-2 px-0'>
-              <img src={slides[slideCount]?.cover} alt="" className='img-fluid'/>
+              <img src={api+slides[slideCount]?.cover} alt="" className='img-fluid'/>
             </div>
           </div>
         </div>

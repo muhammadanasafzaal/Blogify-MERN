@@ -18,21 +18,44 @@ import ForgotPassword from './pages/ForgotPassword';
 import ResetPassword from './pages/ResetPassword';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { ThreeDots } from  'react-loader-spinner'
 
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false)
 
   const tk = useSelector((state) => state.general.hasToken)
+  const loading = useSelector((state) => state.general.isLoading)
   
+
+  const addLoadingScreen = () => {
+    const body = document.querySelector('body')
+    if(body){
+      if(loading){
+        body.classList.add("loading");
+        body.classList.remove("not-loading");
+      } 
+      else{
+        body.classList.add("not-loading");
+        body.classList.remove("loading");
+      }
+    }
+  }
+
   useEffect(() => {
     console.log(tk)
     setIsLoggedIn(tk)
   }, [tk])
 
 
+  useEffect(() => {
+    addLoadingScreen()
+  }, [loading])
+
+
   return (
     <BrowserRouter>
+      <div className={"loading"}>
       { isLoggedIn && <Header />}
       <Routes>
         <Route path="" element={
@@ -71,13 +94,13 @@ function App() {
             :
             <Navigate replace to={"/login"} />
           } />
-        <Route path="/blogs" element={
+        <Route path="/blogs/:categoryId" element={
           isLoggedIn ?
             <Blogs />
             :
             <Navigate replace to={"/login"} />
           } />
-        <Route path="/blog" element={
+        <Route path="/blog/:blogId" element={
           isLoggedIn ?
             <Blog />
             :
@@ -89,21 +112,47 @@ function App() {
             :
             <Navigate replace to={"/login"} />
           } />
+        <Route path="/profile/:userId" element={
+        isLoggedIn ?
+          <Profile />
+          :
+          <Navigate replace to={"/login"} />
+        } />
         <Route path="/forgot-password" element={
           !isLoggedIn ?
             <ForgotPassword />
             :
             <Navigate replace to={"/"} />
           } />
-        <Route path="/reset-password/:token" element={
+        <Route path="/reset-password/:access_token" element={
           !isLoggedIn ?
             <ResetPassword />
             :
             <Navigate replace to={"/"} />
           } />
+         <Route
+            path="*"
+            element={<Navigate to="/" replace />}
+        />  
       </Routes>
       { isLoggedIn && <Footer />}
       <ToastContainer />
+      </div>
+      {
+        loading && 
+      <div className="loader">
+        <ThreeDots 
+        height="80" 
+        width="80" 
+        radius="9"
+        color="#4fa94d" 
+        ariaLabel="three-dots-loading"
+        wrapperStyle={{}}
+        wrapperClassName=""
+        visible={true}
+        />
+      </div>
+      }
     </BrowserRouter>
   );
 }

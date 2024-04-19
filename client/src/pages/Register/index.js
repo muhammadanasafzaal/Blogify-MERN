@@ -6,7 +6,9 @@ import axios from 'axios'
 import { useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify';
 import { Link } from 'react-router-dom';
-
+import { isLoading } from '../../store/generalSlice'
+import { useDispatch } from 'react-redux';
+import axiosInstance from '../../util/axios';
 
 const validationSchema = Yup.object().shape({
     username: Yup.string().min(3, 'Name should be 3 characters long').max(10, 'Name should not exceed 10 characters').required('Name is required'),
@@ -24,7 +26,8 @@ const initialValues = {
 const Register = () => {
 
     const navigate = useNavigate()
-    
+    const dispatch = useDispatch()
+
     const api = process.env.REACT_APP_API_KEY
     const [isPwVisible, setIsPwVisible] = useState(false)
 
@@ -35,8 +38,10 @@ const Register = () => {
     const handleSubmit = async (values) => {
         console.log(values);
         console.log(api)
-        const res = await axios.post(api+'auth/register', values)
+        dispatch(isLoading(true))
+        const res = await axiosInstance.post(api+'auth/register', values)
         if(res && res.data.status_code == 200){
+            dispatch(isLoading(false))
             toast.success(res.data.message,{
                 theme:'colored',
                 autoClose: 2000
@@ -46,6 +51,7 @@ const Register = () => {
             }, 2000);
         }
         else{
+            dispatch(isLoading(false))
             toast.error(res.data.message,{
                 theme:'colored',
                 autoClose: 2000
