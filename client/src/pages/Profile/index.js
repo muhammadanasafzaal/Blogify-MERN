@@ -2,12 +2,15 @@ import axios from 'axios'
 import React, { useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 import axiosInstance from '../../util/axios'
+import { useDispatch } from 'react-redux'
+import { isLoading } from '../../store/generalSlice'
 
 const Profile = () => {
 
     const api = process.env.REACT_APP_API_KEY
 
     const { userId } = useParams();
+    const dispatch = useDispatch()
 
     const [profile, setProfile] = useState(
         {
@@ -114,6 +117,7 @@ const Profile = () => {
             console.log(userId, myUserId, '3')
             res = await axiosInstance.get(`${api}user/profile/${myUserId}`)
         }
+        dispatch(isLoading(true))
         if(res && res.data.status_code==200){
             console.log(res.data)
             setProfile({
@@ -127,7 +131,9 @@ const Profile = () => {
                 following: res.data.data.following,
                 blog_count: res.data.data.blog_count,
             })
+            dispatch(isLoading(false))
         }
+        else dispatch(isLoading(false))
     }
 
     const updateUserProfile = async (key, value) => {
@@ -140,31 +146,36 @@ const Profile = () => {
             console.log('hit')
             let formData = new FormData()
             formData.append(key, (key == 'cover') ? cover : avatar)
-            let headers = {
-              "Content-Type": "multipart/form-data",
-              ...headers
-            }
-            // dispatch(isLoading(true))
+            // let header = {
+            //   "Content-Type": "multipart/form-data",
+            //   ...headers
+            // }
+            dispatch(isLoading(true))
             const res = await axiosInstance.put(`${api}user/profile/update/${userId}`, formData)
             
-            if(res && res.data.status_code==200){
+            if(res && res.data.status_code==200) {
+                dispatch(isLoading(false))
                 return true            
             }
             else{
+                dispatch(isLoading(false))
                 return false
             }
         }
         else{
             console.log('hit2')
+            dispatch(isLoading(true))
             const res = await axiosInstance.put(`${api}user/profile/update/${userId}`,data)
             
             if(res && res.data.status_code==200){
                 if(key == 'username') setTempUsername(null)
                 else if(key == 'designation') setTempDesignation(null)
-
+            
+                dispatch(isLoading(false))
                 return true            
             }
             else{
+                dispatch(isLoading(false))
                 return false
             }
         }

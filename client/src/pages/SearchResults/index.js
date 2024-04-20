@@ -1,6 +1,5 @@
 import React from 'react'
 import { useState, useEffect } from 'react'
-import axios from 'axios'
 import { Link, useParams } from 'react-router-dom'
 import GetCategoryName from '../../components/CategoryName'
 import FormatDate from '../../components/FormatDate'
@@ -9,59 +8,40 @@ import { useDispatch } from 'react-redux'
 import { isLoading } from '../../store/generalSlice'
 
 
-const Blogs = ({ userId }) => {
+const SearchResults = () => {
     const api = process.env.REACT_APP_API_KEY
-    const { categoryId } = useParams()
     const dispatch = useDispatch()
 
-    const [blogs, setBlogs] = useState([])
-    // const [headers, setHeaders] = useState({
-    //     'Authorization': localStorage.getItem('access_token')
-    // })
+    const [searchResults, setSearchResults] = useState([])
 
-    const getBlogs = async () => {
-        if (categoryId) {
+    const getSearchedBlog = async (query) => {
+        if (query) {
             dispatch(isLoading(true))
-            const res = await axiosInstance.get(`${api}blogs/category/${categoryId}`);
-            if (res && res.data.data) {
+            const res = await axiosInstance.get(`${api}blogs/0/${query}`);
+            if (res && res.data.status_code==200) {
                 if (res.data.data.length) {
-                    setBlogs([])
-                    setBlogs([...res.data.data])
-                    console.log(res.data.data)
+                    setSearchResults(null)
+                    setSearchResults([...res.data.data])
                     dispatch(isLoading(false))
                 }
                 else dispatch(isLoading(false))
             }
             else dispatch(isLoading(false))
-            console.log('blogs by cat')
-        }
-        else if (userId) {
-            dispatch(isLoading(true))
-            const res = await axiosInstance.get(`${api}blogs/user/${userId}`);
-            if (res && res.data.data) {
-                if (res.data.data.length) {
-                    setBlogs([])
-                    setBlogs([...res.data.data])
-                    console.log(res.data.data)
-                    dispatch(isLoading(false))
-                }
-                else dispatch(isLoading(false))
-            }
-            else dispatch(isLoading(false))
-            console.log('blogs by user')
         }
     }
 
     useEffect(() => {
-        getBlogs()
+        const queryParameters = new URLSearchParams(window.location.search)
+        let query = queryParameters.get("query")
+        if (query) getSearchedBlog(query)
     }, [])
 
 
     return (
         <div className='container py-5'>
-            <h4 className='mb-4'>{categoryId ? <> Blogs In <GetCategoryName catId={categoryId} /> </> : userId ? 'Your Blogs' : ""} </h4>
+            <h1>Search Results</h1>
             <div className="row">
-                {blogs?.map((item, index) => {
+                {searchResults?.map((item, index) => {
                     return (
                         <div className='col-md-4 col-12 mb-5' key={index}>
                             <Link className='blog' to={`../blog/${item._id}`}>
@@ -112,4 +92,4 @@ const Blogs = ({ userId }) => {
     )
 }
 
-export default Blogs
+export default SearchResults

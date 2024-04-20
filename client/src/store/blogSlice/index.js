@@ -11,6 +11,7 @@ export const BlogSlice = createSlice({
     reducers: {
         allBlogs: (state, action) => {
             state.blogs = []
+            state.blogs = [...action.payload]
         },
         storeBlogCategories: (state, action) => {
             if(action.payload.length){

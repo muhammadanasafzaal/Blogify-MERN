@@ -18,7 +18,8 @@ import ForgotPassword from './pages/ForgotPassword';
 import ResetPassword from './pages/ResetPassword';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { ThreeDots } from  'react-loader-spinner'
+import { ThreeDots } from 'react-loader-spinner'
+import SearchResults from './pages/SearchResults';
 
 
 function App() {
@@ -26,16 +27,16 @@ function App() {
 
   const tk = useSelector((state) => state.general.hasToken)
   const loading = useSelector((state) => state.general.isLoading)
-  
+
 
   const addLoadingScreen = () => {
     const body = document.querySelector('body')
-    if(body){
-      if(loading){
+    if (body) {
+      if (loading) {
         body.classList.add("loading");
         body.classList.remove("not-loading");
-      } 
-      else{
+      }
+      else {
         body.classList.add("not-loading");
         body.classList.remove("loading");
       }
@@ -55,103 +56,111 @@ function App() {
 
   return (
     <BrowserRouter>
-      <div className={"loading"}>
-      { isLoggedIn && <Header />}
-      <Routes>
-        <Route path="" element={
-          isLoggedIn ?
-            <Landing />
-            :
-            <Navigate replace to={"/login"} />
-        } />
-        <Route path="/login" element={
-          !isLoggedIn ?
-            <Login />
-            :
-            <Navigate replace to={"/"} />
-        } />
-        <Route path="/register" element={
-          !isLoggedIn ?
-            <Register />
-            :
-            <Navigate replace to={"/"} />
-        } />
-        <Route path="/categories" element={
-          isLoggedIn ?
-            <Categories />
-            :
-            <Navigate replace to={"/login"} />
-          } />
-        <Route path="/add-blog" element={
-          isLoggedIn ?
-            <PostBlog />
-            :
-            <Navigate replace to={"/login"} />
-          } />
-        <Route path="/my-blogs" element={
-          isLoggedIn ?
-            <MyBlogs />
-            :
-            <Navigate replace to={"/login"} />
-          } />
-        <Route path="/blogs/:categoryId" element={
-          isLoggedIn ?
-            <Blogs />
-            :
-            <Navigate replace to={"/login"} />
-          } />
-        <Route path="/blog/:blogId" element={
-          isLoggedIn ?
-            <Blog />
-            :
-            <Navigate replace to={"/login"} />
-          } />
-        <Route path="/profile" element={
-          isLoggedIn ?
-            <Profile />
-            :
-            <Navigate replace to={"/login"} />
-          } />
-        <Route path="/profile/:userId" element={
-        isLoggedIn ?
-          <Profile />
-          :
-          <Navigate replace to={"/login"} />
-        } />
-        <Route path="/forgot-password" element={
-          !isLoggedIn ?
-            <ForgotPassword />
-            :
-            <Navigate replace to={"/"} />
-          } />
-        <Route path="/reset-password/:access_token" element={
-          !isLoggedIn ?
-            <ResetPassword />
-            :
-            <Navigate replace to={"/"} />
-          } />
-         <Route
-            path="*"
-            element={<Navigate to="/" replace />}
-        />  
-      </Routes>
-      { isLoggedIn && <Footer />}
-      <ToastContainer />
+      <div className={loading && "loading"}>
+        {isLoggedIn && <Header />}
+        <div class="content">
+          <Routes>
+            <Route path="" element={
+              isLoggedIn ?
+                <Landing />
+                :
+                <Navigate replace to={"/login"} />
+            } />
+            <Route path="/login" element={
+              !isLoggedIn ?
+                <Login />
+                :
+                <Navigate replace to={"/"} />
+            } />
+            <Route path="/register" element={
+              !isLoggedIn ?
+                <Register />
+                :
+                <Navigate replace to={"/"} />
+            } />
+            <Route path="/categories" element={
+              isLoggedIn ?
+                <Categories />
+                :
+                <Navigate replace to={"/login"} />
+            } />
+            <Route path="/add-blog" element={
+              isLoggedIn ?
+                <PostBlog />
+                :
+                <Navigate replace to={"/login"} />
+            } />
+            <Route path="/my-blogs" element={
+              isLoggedIn ?
+                <MyBlogs />
+                :
+                <Navigate replace to={"/login"} />
+            } />
+            <Route path="/blogs/:categoryId" element={
+              isLoggedIn ?
+                <Blogs />
+                :
+                <Navigate replace to={"/login"} />
+            } />
+            <Route path="/blog/:blogId" element={
+              isLoggedIn ?
+                <Blog />
+                :
+                <Navigate replace to={"/login"} />
+            } />
+            <Route path="/profile" element={
+              isLoggedIn ?
+                <Profile />
+                :
+                <Navigate replace to={"/login"} />
+            } />
+            <Route path="/profile/:userId" element={
+              isLoggedIn ?
+                <Profile />
+                :
+                <Navigate replace to={"/login"} />
+            } />
+            <Route path="/forgot-password" element={
+              !isLoggedIn ?
+                <ForgotPassword />
+                :
+                <Navigate replace to={"/"} />
+            } />
+            <Route path="/reset-password/:access_token" element={
+              !isLoggedIn ?
+                <ResetPassword />
+                :
+                <Navigate replace to={"/"} />
+            } />
+            <Route path="/search" element={
+              isLoggedIn ?
+                <SearchResults />
+                :
+                <Navigate replace to={"/login"} />
+            } />
+            <Route
+              path="*"
+              element={<Navigate to="/" replace />}
+            />
+          </Routes>
+        </div>
+        {isLoggedIn && <Footer />}
+        <ToastContainer />
       </div>
       {
-        loading && 
-      <div className="loader">
-        <ThreeDots 
-        height="80" 
-        width="80" 
-        radius="9"
-        color="#4fa94d" 
-        ariaLabel="three-dots-loading"
-        wrapperStyle={{}}
-        wrapperClassName=""
-        visible={true}
-        />
-      </div>
+        loading &&
+        <div className="loader">
+          <ThreeDots
+            height="80"
+            width="80"
+            radius="9"
+            color="#6600d7"
+            ariaLabel="three-dots-loading"
+            wrapperStyle={{}}
+            wrapperClassName=""
+            visible={true}
+          />
+        </div>
       }
     </BrowserRouter>
   );

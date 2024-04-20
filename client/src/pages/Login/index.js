@@ -10,6 +10,7 @@ import { hasToken } from "../../store/generalSlice";
 import { useSelector } from "react-redux";
 import { isLoading } from '../../store/generalSlice'
 import axiosInstance from '../../util/axios';
+import { allBlogs } from '../../store/blogSlice';
 
 const validationSchema = Yup.object().shape({
     email: Yup.string().email('Invalid email').required('Email is required'),
@@ -45,7 +46,7 @@ const Login = () => {
             });
             localStorage.setItem('access_token', res.data['access_token'])
             localStorage.setItem('refresh_token', res.data['refresh_token'])
-            localStorage.setItem('user', JSON.stringify(res.data.data))
+            localStorage.setItem('user', JSON.stringify(res.data.data))            
             dispatch(hasToken(true))
             setTimeout(() => {
                 navigate('/')                
@@ -59,8 +60,6 @@ const Login = () => {
             });
         }
     };
-
-
 
     return (
         <div className='auth'>

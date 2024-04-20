@@ -16,7 +16,7 @@ import { isLoading } from '../../store/generalSlice'
 
 
 const commentSchema = Yup.object().shape({
-    comment: Yup.string().min(4, 'Comment must contain least 4 characters').max(250, 'Comment must not exceed 250 characters').required('Comment is required'),
+    comment: Yup.string().min(1, 'Comment must contain least 1 characters').max(250, 'Comment must not exceed 250 characters'),
 });
 
 const initialValues = {
@@ -29,10 +29,11 @@ const Blog = () => {
     const api = process.env.REACT_APP_API_KEY
 
     const dispatch = useDispatch()
+    
 
     const [blog, setBlog] = useState(null)
     const [hasLikedPost, setHasLikedPost] = useState(false)
-    const [hasLikedComment, setHasLikedComment] = useState(false)
+    const [hasLikedComment, setHasLikedComment] = useState(1)
     const [isFollower, setIsFollower] = useState(false)
     const [isMyBlog, setIsMyBlog] = useState(false)
     const [userComment, setUserComment] = useState(false)
@@ -41,21 +42,19 @@ const Blog = () => {
     // })
 
     let { blogId } = useParams();
-    // console.log(blogId)
 
     const getBlog = async () => {
-        // const res = await axios.get('/data/blogs.json');
-
+        dispatch(isLoading(true))
         const res = await axiosInstance.get(`${api}blogs/`);
         if (res && res.data.data) {
             if (res.data.data.length) {
                 const singleBlog = res.data.data.filter(b => b._id == blogId)
                 if(singleBlog.length){
+                    dispatch(isLoading(false))
                     setBlog(singleBlog[0])
                     const userId = JSON.parse(localStorage.getItem('user'))?.id
                     setIsMyBlog(singleBlog[0].author._id == userId ? true : false)
                     const hasLiked = singleBlog[0].likes.filter(likers=> likers == userId)
-                    // console.log(userId,singleBlog[0], hasLiked,'---------------')
                     if(hasLiked.length){
                         setHasLikedPost(true)
                     }
@@ -63,8 +62,11 @@ const Blog = () => {
                         setHasLikedPost(false)
                     }
                 }
+                else dispatch(isLoading(false))
             }
+            else dispatch(isLoading(false))
         }
+        else dispatch(isLoading(false))
     }
 
     const handlePostLike = async (blogId) => {
@@ -84,7 +86,6 @@ const Blog = () => {
 
     const handleCommentLike = async (commentId) => {
         const userId = JSON.parse(localStorage.getItem('user'))?.id
-        // setHasLikedComment(!hasLikedComment)
         
         const data = {
             userId: userId,
@@ -92,6 +93,8 @@ const Blog = () => {
             commentId: commentId,
             like: hasUserLikedComment(commentId) ? false : true
         }
+        setHasLikedComment(2)
+        console.log(hasLikedComment)
         for(const key in data){
             if(key != 'like'){
                 if(!data[key]) return 
@@ -100,6 +103,8 @@ const Blog = () => {
         const res = await axiosInstance.put(`${api}blogs/comment/update-reaction`, data)
         if(res && res.data.data.status_code == 200){
             console.log(res.data.data)
+            setHasLikedComment(1)
+            console.log(hasLikedComment)
         }
     }
 
@@ -143,11 +148,11 @@ const Blog = () => {
             const comment = blog?.comments?.filter(c => c._id === commentId)
             if(comment.length){
                 if(comment[0].likes.includes(userId)){
-                    console.log('liked')
+                    // console.log('liked')
                     return true
                 }
                 else{
-                    console.log(comment,userId,'not liked')
+                    // console.log(comment,userId,'not liked')
                     return false
                 }
             }
@@ -166,6 +171,7 @@ const Blog = () => {
         dispatch(isLoading(true))
         const res = await axiosInstance.post(api+'blogs/comment/add', info)
         console.log(res)
+        setUserComment(null)
         if(res && res.data.status_code == 200){
             dispatch(isLoading(false))
             toast.success(res.data.message,{
@@ -192,6 +198,7 @@ const Blog = () => {
 
     useEffect(() => {
         getBlog()
+        console.log('change')
     }, [hasLikedPost, hasLikedComment, userComment])
     
 
@@ -257,7 +264,7 @@ const Blog = () => {
                     <div className="row mb-3">
                         <div className="col-md-2 col-12">
                             <Link to={`../../profile/${blog?.author._id}`}>
-                                <img src={blog?.avatar ? api+blog?.avatar : `${api}uploads/user.jpg`} alt={blog?.author.username} className="img-fluid author-img" style={{height:'100px'}}/>
+                                <img src={blog?.avatar ? api+blog?.avatar : `${api}uploads/user.jpg`} alt={blog?.author.username} className="img-fluid" style={{height:'auto'}}/>
                             </Link>
                         </div>
                         <div className="col-md-10 col-12">
@@ -282,14 +289,13 @@ const Blog = () => {
                                 validationSchema={commentSchema}
                                 onSubmit={handleUserComment}
                             >
-                                {({ errors, touched }) => (
+                                {({ values, errors, touched }) => (
                                     <Form className='py-3'>
-                                        <Field className="form-control mb-2 comment" component="textarea" id="comment" name="comment" cols="20" rows="10"/>
+                                        <Field className="form-control mb-2 comment" component="textarea" id="comment" name="comment" cols="10" rows="5"/>
                                         <small className='d-block' style={{ color: 'red', width: '100%' }} >
                                             <ErrorMessage name="comment" component="div" />
                                         </small>
-                                        <button type="submit" className='btn btn-primary bg-purple' disabled={errors.comment}>Submit</button>
-                                        <button className='btn btn-outline-dark ml-2'>Cancel</button>
+                                        <button type="submit" className='btn btn-primary bg-purple' disabled={!values.comment}>Submit</button>
                                     </Form>
                                 )}
                             </Formik>

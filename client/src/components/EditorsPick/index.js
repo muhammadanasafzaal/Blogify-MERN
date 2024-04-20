@@ -16,7 +16,6 @@ const EditorsPick = () => {
     "Authorization": localStorage.getItem('access-token')
   })
 
-  const categories = useSelector((state) => state.blog.blogCategories)
   const dispatch = useDispatch()
 
   const getBlogsForSlides = async () => {
@@ -96,8 +95,8 @@ const EditorsPick = () => {
                 </div>
               </div>
               <div className='indicators bg-light py-4'>
-                <button className='btn btn-dark' onClick={()=>rotateSlide('-')}><i className='fa fa-chevron-left'></i></button>
-                <button className='btn btn-dark ml-1' onClick={()=>rotateSlide('+')}><i className='fa fa-chevron-right'></i></button>
+                <button className='btn btn-dark' onClick={()=>rotateSlide('-')}><i className='fa fa-chevron-left mr-1'></i></button>
+                <button className='btn btn-dark ml-1' onClick={()=>rotateSlide('+')}><i className='fa fa-chevron-right ml-1'></i></button>
               </div>
             </div>
             <div className='col-md-8 col-12 offset-md-4 order-xs-1 cover px-md-2 px-0'>

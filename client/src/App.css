@@ -16,10 +16,24 @@ a:hover{
   text-decoration: none;
 }
 
-#root{
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+.content {
+  min-height: calc( 100vh - 380px )
+}
+.footer {
+  height: 380px;
+  background: #dcdcdc;
+}
+
+/* #root{
   position: relative;
   height: 100vh;
-}
+} */
 
 .loader{
   position: absolute;
@@ -29,8 +43,9 @@ a:hover{
 }
 
 .loading{
-  /* filter: blur(5px); */
-  overflow-y: hidden;
+  filter: blur(2px);
+  /* filter: brightness(0.3); */
+  /* overflow-y: hidden; */
 }
 
 .not-loading{
@@ -99,6 +114,14 @@ a:hover{
   border-radius: 25px;
 }
 
+.blog{
+  display: block;
+  background: #fbfbfb;
+  padding: 17px;
+  border-radius: 7px;
+  box-shadow: rgba(33, 35, 38, 0.1) 0px 10px 10px -10px;
+}
+
 .blog > .cover{
   position: relative;
 }
@@ -137,16 +160,31 @@ ul li {
   border-radius: 25px;
 } */
 
+.indicators .btn{
+  border-radius: 50%;
+}
+
+.search-results{
+  position: absolute;
+  z-index: 99;
+  width: 85%;
+  background: #fff;
+  padding: 1rem 0.5rem;
+}
+
+.search-results ul li{
+  background: #efefef;
+  padding: 0.3rem 1rem;
+  border-radius: 4px;
+  margin-bottom: 0.5rem;
+}
+
 .action-btn{
   border-radius: 25px;
 }
 
 .bg-gray{
   background: #f8f8f8;
-}
-
-#footer{
-  background: #dcdcdc;
 }
 
 .sphere{
@@ -167,8 +205,8 @@ ul li {
 
 /* PROFILE START */
 .author-img{
-  height: 40px;
-  width: auto;
+  height: 60px;
+  width: 60px;
   border-radius: 50%;
 }
 
@@ -186,6 +224,7 @@ ul li {
 }
 
 #profile .main > .avatar > div > img {
+  object-fit: cover;
   border-radius: 50%;
   border: 8px solid #fff;
   height: 150px;
@@ -231,7 +270,7 @@ ul li {
   height:600px;
   width: 100%;
 }
-.hero-main .content{
+.hero-main .hero-content{
   position: absolute;
   top: 50%;
   left: 50%;

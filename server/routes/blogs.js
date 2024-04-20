@@ -15,8 +15,7 @@ router.put('/update-reaction', authenticateToken, saveReactionForPost)
 router.delete('/delete-blog/:id', authenticateToken, deleteBlogPost)
 router.post('/comment/add', authenticateToken, saveUserComment)
 router.put('/comment/update-reaction', authenticateToken, saveReactionForComment)
-
-router.get('/:id', authenticateToken, getBlogs)
+router.get('/:id?/:title?', authenticateToken, getBlogs)
 
 
 export default router;
