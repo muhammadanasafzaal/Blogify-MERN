@@ -160,6 +160,17 @@ ul li {
   border-radius: 25px;
 } */
 
+.btn{
+  border-radius: 25px;
+  padding: 0.5rem 1rem;
+}
+
+.btn-primary.disabled, .btn-primary:disabled {
+  color: #fff;
+  background-color: #6600d7;
+  border-color: #6600d7;
+}
+
 .indicators .btn{
   border-radius: 50%;
 }

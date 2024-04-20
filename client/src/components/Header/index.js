@@ -9,7 +9,6 @@ const Header = () => {
     const navigate = useNavigate()
 
     const loading = useSelector((state) => state.general.isLoading)
-    console.log(loading,'sss')
     const [searchQuery, setSearchQuery] = useState(null)
 
     const logOut = () => {

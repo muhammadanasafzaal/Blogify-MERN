@@ -22,7 +22,7 @@ const EditorsPick = () => {
     // const res = await axios.get('/data/blogs.json')
     dispatch(isLoading(true))
     console.log('blog for editor pick')
-    const res = await axiosInstance.get(`${api}blogs/${2}`)
+    const res = await axiosInstance.get(`${api}blogs/`)
     if(res && res.data.data){
       console.log('resp editor pick blog',res.data.data)
       setSlides([])

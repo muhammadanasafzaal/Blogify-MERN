@@ -1,5 +1,5 @@
 import express from 'express'
-import { addBlogCategories, getBlogs, getBlogCategories, addBlog, updateBlog, deleteBlogPost, getBlogsByCategory, getBlogsForUser, saveReactionForPost, saveUserComment, saveReactionForComment } from '../controllers/blogs.js'
+import { addBlogCategories, getBlogs, getBlogCategories, addBlog, updateBlog, deleteBlogPost, getBlogsByCategory, getBlogsForUser, saveReactionForPost, saveUserComment, saveReactionForComment, getCommentsForBlog } from '../controllers/blogs.js'
 import upload from '../middlewares/file-upload.js'
 import authenticateToken from '../middlewares/authenticate-token.js'
 
@@ -16,6 +16,8 @@ router.delete('/delete-blog/:id', authenticateToken, deleteBlogPost)
 router.post('/comment/add', authenticateToken, saveUserComment)
 router.put('/comment/update-reaction', authenticateToken, saveReactionForComment)
 router.get('/:id?/:title?', authenticateToken, getBlogs)
+router.get('/comment/:blog_id?', authenticateToken, getCommentsForBlog)
+
 
 
 export default router;

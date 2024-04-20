@@ -26,11 +26,9 @@ const LatestBlogs = () => {
         try {
             // const res = await axios.get('/data/blogs.json');
             dispatch(isLoading(true))
-            console.log(cat, 'get latest blog')
             setSelectedCategory(cat)
-            const res = await axiosInstance.get(`${api}blogs/${1}`);
+            const res = await axiosInstance.get(`${api}blogs/`);
             if (res && res.data.data) {
-                console.log(res.data.data, 'resp latest blog')
                 dispatch(isLoading(false))
                 if (res.data.data.length) {
                     if (!cat) {

@@ -4,7 +4,7 @@ import User from "../models/auth.js"
 import mongoose from "mongoose";
 
 export const getBlogs = async (req, res) => {
-    const { title } = req.params
+    const { title,id } = req.params
     try {
         let blogs;
         console.log(req.params,'===>')
@@ -29,6 +29,42 @@ export const getBlogs = async (req, res) => {
                         }
                     }
                 },
+                {
+                    "$project": {
+                        "_id": 1,
+                        "title": 1,
+                        "content": 1,
+                        "categories": 1,
+                        "cover": 1,
+                        "likes": 1,
+                        "comments": 1,
+                        "createdAt": 1,
+                        "updatedAt": 1,
+                        "author": {
+                            "_id": "$author._id",
+                            "username": "$author.username",
+                            "designation": "$author.designation",
+                            "avatar": "$author.avatar",
+                            "avatar": "$author.avatar",
+                            "followers": "$author.followers",
+                            "following": "$author.following"
+                        },
+                    }
+                }
+            ]);
+        }
+        else if (id) {
+            blogs = await BlogPost.aggregate([
+                {
+                    "$lookup": {
+                        "from": "users",
+                        "localField": "author",
+                        "foreignField": "_id",
+                        "as": "author"
+                    }
+                },
+                { "$unwind": '$author' },
+                { "$match": { "_id": new mongoose.Types.ObjectId(id) } },
                 {
                     "$project": {
                         "_id": 1,
@@ -326,6 +362,22 @@ export const getBlogsForUser = async (req, res) => {
         }
         else {
             res.status(200).json({ status_code: 404, message: "blogs not found" })
+        }
+    } catch (error) {
+        res.status(500).json({ status_code: 500, message: error.message })
+    }
+}
+
+export const getCommentsForBlog = async (req, res) => {
+    const { blog_id } = req.params //userid
+    console.log(req.params,'=com')
+    try {
+        const blog = await BlogPost.findOne({ _id: blog_id });
+        if (blog) {
+            res.status(200).json({ status_code: 200, data: blog.comments })
+        }
+        else {
+            res.status(200).json({ status_code: 404, message: "comments not found" })
         }
     } catch (error) {
         res.status(500).json({ status_code: 500, message: error.message })

@@ -33,10 +33,11 @@ const Blog = () => {
 
     const [blog, setBlog] = useState(null)
     const [hasLikedPost, setHasLikedPost] = useState(false)
-    const [hasLikedComment, setHasLikedComment] = useState(1)
+    const [hasLikedComment, setHasLikedComment] = useState(false)
     const [isFollower, setIsFollower] = useState(false)
     const [isMyBlog, setIsMyBlog] = useState(false)
-    const [userComment, setUserComment] = useState(false)
+    const [userComment, setUserComment] = useState(null)
+    const [blogComments, setBlogComments] = useState([])
     // const [headers, setHeaders] = useState({
     //     'Authorization': localStorage.getItem('access_token')
     // })
@@ -45,24 +46,18 @@ const Blog = () => {
 
     const getBlog = async () => {
         dispatch(isLoading(true))
-        const res = await axiosInstance.get(`${api}blogs/`);
-        if (res && res.data.data) {
-            if (res.data.data.length) {
-                const singleBlog = res.data.data.filter(b => b._id == blogId)
-                if(singleBlog.length){
-                    dispatch(isLoading(false))
-                    setBlog(singleBlog[0])
-                    const userId = JSON.parse(localStorage.getItem('user'))?.id
-                    setIsMyBlog(singleBlog[0].author._id == userId ? true : false)
-                    const hasLiked = singleBlog[0].likes.filter(likers=> likers == userId)
-                    if(hasLiked.length){
-                        setHasLikedPost(true)
-                    }
-                    else{
-                        setHasLikedPost(false)
-                    }
-                }
-                else dispatch(isLoading(false))
+        const res = await axiosInstance.get(`${api}blogs/${blogId.length > 10 ? blogId : null}`);
+        if (res && res.data.status_code==200) {
+            if (res.data.data) {
+                dispatch(isLoading(false))
+                setBlog(res.data.data[0])
+                console.log(res.data.data[0],'==blog')
+                getBlogComments(res.data.data[0]._id)
+                const userId = JSON.parse(localStorage.getItem('user'))?.id
+                setIsMyBlog(res.data.data[0].author._id == userId ? true : false)
+                const hasLiked = res.data.data[0].likes.filter(likers=> likers == userId)
+                if(hasLiked.length) setHasLikedPost(true)
+                else setHasLikedPost(false)
             }
             else dispatch(isLoading(false))
         }
@@ -93,19 +88,17 @@ const Blog = () => {
             commentId: commentId,
             like: hasUserLikedComment(commentId) ? false : true
         }
-        setHasLikedComment(2)
-        console.log(hasLikedComment)
         for(const key in data){
             if(key != 'like'){
                 if(!data[key]) return 
             }
         }
+        setHasLikedComment(true)
         const res = await axiosInstance.put(`${api}blogs/comment/update-reaction`, data)
-        if(res && res.data.data.status_code == 200){
-            console.log(res.data.data)
-            setHasLikedComment(1)
-            console.log(hasLikedComment)
+        if(res && res.data.status_code == 200){
+            setHasLikedComment(false)
         }
+        console.log('cccc')
     }
 
 
@@ -124,18 +117,15 @@ const Blog = () => {
     }
 
     const checkIsUserFollowingAuthor = async () => {
-        console.log(blog, 'bbbbbbbbbbbbbbbb')
         if(blog){
             const res = await axiosInstance.get(`${api}user/profile/${blog?.author._id}`) //get author data
             if(res && res.data.data.status_code == 200){
                 console.log(res.data.data, 'user data ----------')
                 const userId = JSON.parse(localStorage.getItem('user'))?.id //get loggedin user id
                 if(res.data.data.following.includes(userId)){
-                    console.log('following')
                     isFollower(true)
                 }
                 else{
-                    console.log('nt following')
                     isFollower(false)
                 }
             } 
@@ -143,15 +133,19 @@ const Blog = () => {
     }
 
     const hasUserLikedComment = (commentId) => {
+        console.log(commentId,'1')
         if(blog){
             const userId = JSON.parse(localStorage.getItem('user'))?.id //get loggedin user id
             const comment = blog?.comments?.filter(c => c._id === commentId)
             if(comment.length){
+                console.log(commentId,'2')
                 if(comment[0].likes.includes(userId)){
                     // console.log('liked')
+                    console.log(commentId,true)
                     return true
                 }
                 else{
+                    console.log(commentId,false)
                     // console.log(comment,userId,'not liked')
                     return false
                 }
@@ -160,7 +154,6 @@ const Blog = () => {
     }
 
     const handleUserComment = async (values) => {
-        console.log(values, 'comment')
         const userId = JSON.parse(localStorage.getItem('user'))?.id
         const info = {
             authorId: userId,
@@ -168,16 +161,17 @@ const Blog = () => {
             blogId: blogId
         }
         if(!info.authorId || !info.comment || !info.blogId) return 
+        setUserComment(values.comment)
         dispatch(isLoading(true))
         const res = await axiosInstance.post(api+'blogs/comment/add', info)
         console.log(res)
-        setUserComment(null)
         if(res && res.data.status_code == 200){
             dispatch(isLoading(false))
             toast.success(res.data.message,{
                 theme:'colored',
                 autoClose: 2000
             });
+            setUserComment(null)
         }
         else{
             dispatch(isLoading(false))
@@ -187,6 +181,19 @@ const Blog = () => {
             });
         }
     };
+
+    const getBlogComments = async (blogId) => {
+        dispatch(isLoading(true))
+        const res = await axiosInstance.get(`${api}blogs/comment/${blogId}`);
+        if (res && res.data.status_code==200) {
+            if (res.data.data.length) {
+                dispatch(isLoading(false))
+                setBlogComments([...res.data.data])
+            }
+            else dispatch(isLoading(false))
+        }
+        else dispatch(isLoading(false))
+    }
 
     useEffect(() => {
         getBlog()
@@ -198,7 +205,6 @@ const Blog = () => {
 
     useEffect(() => {
         getBlog()
-        console.log('change')
     }, [hasLikedPost, hasLikedComment, userComment])
     
 
@@ -216,9 +222,6 @@ const Blog = () => {
                             })
                     }
                     <h1>{blog?.title}</h1>
-                    {/* excerpt */}
-                    <p>{blog?.content.length > 15 ? blog?.content.slice(0, 15) + "..." : blog?.content}</p> 
-                    {/* excerpt */}
                     <hr />
                     <div className='row blog-details mb-2'>
                         <div className="col-md-5 col-12 d-flex align-items-center">
@@ -273,9 +276,11 @@ const Blog = () => {
                             {blog?.author.designation && <p>{blog?.author.designation}</p>}
                             {
                                 !isMyBlog && 
-                                <Link onClick={()=>handleUserFollow(blog?.author._id)}>
-                                    { isFollower ? 'Following' : 'Follow' }
-                                </Link>
+                                <button className='btn btn-dark'>
+                                    <Link className='text-light' onClick={()=>handleUserFollow(blog?.author._id)}>
+                                        { isFollower ? 'Following' : 'Follow' }
+                                    </Link>
+                                </button>
                             }
                         </div>
                     </div>
@@ -303,10 +308,10 @@ const Blog = () => {
                     </div>
                     <div className="row">
                         <div className="col-12">
-                            <h3>Responses { `(${blog?.comments.length})` }</h3>
+                            <h3>Responses { `(${blogComments.length})` }</h3>
                         </div>
                     </div>
-                    {blog?.comments.length ? blog?.comments.map((c, c_idx)=> {
+                    {blogComments?.length ? blogComments?.map((c, c_idx)=> {
                         return(
                             <div className="row mb-3" key={c_idx}>
                                 <div className="col-2 d-flex justify-content-center align-items-center">
