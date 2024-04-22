@@ -38,7 +38,7 @@ const Landing = () => {
                 <section>
                   <Hero/>
                 </section>
-                <section className='py-5'>
+                <section className='py-5 latest-blogs'>
                   <LatestBlogs/>
                 </section>
                 <section className='py-5 bg-gray'>

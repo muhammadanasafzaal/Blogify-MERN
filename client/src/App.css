@@ -159,6 +159,9 @@ ul li {
 /* .cover > img{
   border-radius: 25px;
 } */
+.latest-blogs{
+  background-image: url('../public/images/covers/bg.jpg');
+}
 
 .btn{
   border-radius: 25px;
