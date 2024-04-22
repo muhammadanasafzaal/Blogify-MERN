@@ -14,7 +14,7 @@ const Footer = () => {
     
 
     return (
-        <footer class="footer">
+        <footer className="footer">
             <div className='container py-5'>
                 <div className="row">
                     <div className="col-md-4 col-12">

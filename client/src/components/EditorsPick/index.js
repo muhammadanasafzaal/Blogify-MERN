@@ -25,7 +25,7 @@ const EditorsPick = () => {
     if(res && res.data.data){
       setSlides([])
       setSlides([...res.data.data])
-      isLoading(false)
+      dispatch(isLoading(false))
     }
     else{
       dispatch(isLoading(false))

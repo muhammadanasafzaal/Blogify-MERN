@@ -18,7 +18,7 @@ import ForgotPassword from './pages/ForgotPassword';
 import ResetPassword from './pages/ResetPassword';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { ThreeDots } from 'react-loader-spinner'
+import { TailSpin, ThreeDots } from 'react-loader-spinner'
 import SearchResults from './pages/SearchResults';
 
 
@@ -57,7 +57,7 @@ function App() {
     <BrowserRouter>
       <div className={loading && "loading"}>
         {isLoggedIn && <Header />}
-        <div class="content">
+        <div className="content">
           <Routes>
             <Route path="" element={
               isLoggedIn ?
@@ -149,15 +149,16 @@ function App() {
       {
         loading &&
         <div className="loader">
-          <ThreeDots
+
+          <TailSpin
+            visible={true}
             height="80"
             width="80"
-            radius="9"
             color="#6600d7"
-            ariaLabel="three-dots-loading"
+            ariaLabel="tail-spin-loading"
+            radius="1"
             wrapperStyle={{}}
-            wrapperClassName=""
-            visible={true}
+            wrapperClass=""
           />
         </div>
       }

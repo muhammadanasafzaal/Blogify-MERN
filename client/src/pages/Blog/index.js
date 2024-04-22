@@ -117,16 +117,13 @@ const Blog = () => {
 
     const checkIsUserFollowingAuthor = async () => {
         if(blog){
-            const res = await axiosInstance.get(`${api}user/profile/${blog?.author._id}`) //get author data
-            if(res && res.data.data.status_code == 200){
-                const userId = JSON.parse(localStorage.getItem('user'))?.id //get loggedin user id
-                if(res.data.data.following.includes(userId)){
-                    isFollower(true)
-                }
-                else{
-                    isFollower(false)
-                }
-            } 
+            const userId = JSON.parse(localStorage.getItem('user'))?.id //get loggedin user id
+            if(blog.author.followers.includes(userId)){
+                setIsFollower(true)
+            }
+            else{
+                setIsFollower(false)
+            }
         }
     }
 
