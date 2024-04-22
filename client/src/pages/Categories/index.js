@@ -33,16 +33,13 @@ const Categories = () => {
   }
 
   const getBlogCountByCategory = async () => {
-    console.log('working')
     if(categories.length){
-      console.log('has catg')
       categories.forEach(async (c, index) => {
         dispatch(isLoading(true))
         const res = await axiosInstance.get(`${api}blogs/category/${c._id}`)
         if(res && res.data.status_code==200){
           if(res.data.data){
             const data = { ...c, blog_count: res.data.data.length }
-            console.log(data, 'done') 
             setCategoriesWithBlogCount(oldArray => [...oldArray, data] );
           }
           else dispatch(isLoading(false))
@@ -50,7 +47,6 @@ const Categories = () => {
         else dispatch(isLoading(false))
         
         if(index == categories.length-1){
-          console.log(index, categories.length-1, 'index')
           setHasData(true)  
         }
       })

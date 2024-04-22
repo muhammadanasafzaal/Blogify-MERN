@@ -34,14 +34,9 @@ const LatestBlogs = () => {
                     if (!cat) {
                         setBlogs([])
                         setBlogs([...res.data.data])
-                        // setBlogs(blogs.length=4)
-                        console.log('all')
                     }
                     else {
-                        console.log(cat, 'type')
-
                         const typeCat = res.data.data.filter(c => c.categories.includes(cat))
-                        console.log(typeCat)
                         if (typeCat.length) {
                             setBlogs([])
                             setBlogs([...typeCat])
@@ -50,7 +45,6 @@ const LatestBlogs = () => {
                 }
             }
             else {
-                console.log('no resp latest blog')
                 dispatch(isLoading(false))
             }
         } catch (error) {

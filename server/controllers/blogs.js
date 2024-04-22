@@ -7,7 +7,6 @@ export const getBlogs = async (req, res) => {
     const { title,id } = req.params
     try {
         let blogs;
-        console.log(req.params,'===>')
         if (title) {
             blogs = await BlogPost.aggregate([
                 {
@@ -133,15 +132,12 @@ export const getBlogs = async (req, res) => {
 
 export const addBlog = async (req, res) => {
     const { id } = req.params
-    console.log(req.body)
-    // console.log(req.file)
     try {
         if (id) {
             const user = await User.findOne({
                 _id: id
             })
             if (user) {
-                console.log(req.body.categories, 'bef')
                 const tmpCat = req.body.categories.split(',')
                 tmpCat?.forEach(cat => {
                     new mongoose.Types.ObjectId(cat)
@@ -194,7 +190,6 @@ export const updateBlog = async (req, res) => {
                         delete valuesToUpdate[k]
                     }
                 })
-                console.log(valuesToUpdate, 'blog update')
                 await BlogPost.findOneAndUpdate({
                     _id: id
                 },
@@ -218,7 +213,6 @@ export const updateBlog = async (req, res) => {
 
 export const deleteBlogPost = async (req, res) => {
     const { id } = req.params // blog id
-    console.log(id, 'del')
     try {
         if (id) {
             await BlogPost.findOneAndDelete({
@@ -237,7 +231,6 @@ export const deleteBlogPost = async (req, res) => {
 export const getBlogCategories = async (req, res) => {
     try {
         const categories = await BlogCategory.find()
-        // console.log(categories, 'cat')
         res.status(200).json({ status_code: 200, data: categories })
     } catch (error) {
         res.status(500).json({ status_code: 500, message: error.message })
@@ -246,7 +239,6 @@ export const getBlogCategories = async (req, res) => {
 
 export const addBlogCategories = async (req, res) => {
     const { categories } = req.body
-    // console.log(categories , 'cat')
     try {
         if (categories.length) {
             for (const c of categories) {
@@ -303,7 +295,6 @@ export const getBlogsByCategory = async (req, res) => {
                 }
             }
         ]);
-        // console.log(categories, 'cat')
         if (blogs.length) {
             res.status(200).json({ status_code: 200, data: blogs })
         }
@@ -370,7 +361,6 @@ export const getBlogsForUser = async (req, res) => {
 
 export const getCommentsForBlog = async (req, res) => {
     const { blog_id } = req.params //userid
-    console.log(req.params,'=com')
     try {
         const blog = await BlogPost.findOne({ _id: blog_id });
         if (blog) {
@@ -408,7 +398,6 @@ export const saveReactionForPost = async (req, res) => {
                     })
             }
 
-            console.log(update, 'sasasasas')
             if (update) {
                 res.status(200).json({ status_code: 200, message: "Liked updated" })
             }
@@ -470,7 +459,6 @@ export const saveReactionForComment = async (req, res) => {
             // })
             // if(!blog) return res.status(200).json({ status_code: 404, message:"Blog not found" })
             if (like) {
-                console.log('push')
                 update = await BlogPost.findOneAndUpdate(
                     {
                         "_id": blogId,
@@ -492,7 +480,6 @@ export const saveReactionForComment = async (req, res) => {
                 )
             }
             else {
-                console.log('pull')
                 update = await BlogPost.findOneAndUpdate({
                     "_id": blogId,
                     "comments._id": commentId

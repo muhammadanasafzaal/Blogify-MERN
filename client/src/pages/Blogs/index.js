@@ -27,13 +27,11 @@ const Blogs = ({ userId }) => {
                 if (res.data.data.length) {
                     setBlogs([])
                     setBlogs([...res.data.data])
-                    console.log(res.data.data)
                     dispatch(isLoading(false))
                 }
                 else dispatch(isLoading(false))
             }
             else dispatch(isLoading(false))
-            console.log('blogs by cat')
         }
         else if (userId) {
             dispatch(isLoading(true))
@@ -42,13 +40,11 @@ const Blogs = ({ userId }) => {
                 if (res.data.data.length) {
                     setBlogs([])
                     setBlogs([...res.data.data])
-                    console.log(res.data.data)
                     dispatch(isLoading(false))
                 }
                 else dispatch(isLoading(false))
             }
             else dispatch(isLoading(false))
-            console.log('blogs by user')
         }
     }
 

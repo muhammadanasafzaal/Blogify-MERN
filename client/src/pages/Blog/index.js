@@ -50,11 +50,13 @@ const Blog = () => {
         if (res && res.data.status_code==200) {
             if (res.data.data) {
                 dispatch(isLoading(false))
+
                 setBlog(res.data.data[0])
-                console.log(res.data.data[0],'==blog')
                 getBlogComments(res.data.data[0]._id)
+
                 const userId = JSON.parse(localStorage.getItem('user'))?.id
                 setIsMyBlog(res.data.data[0].author._id == userId ? true : false)
+
                 const hasLiked = res.data.data[0].likes.filter(likers=> likers == userId)
                 if(hasLiked.length) setHasLikedPost(true)
                 else setHasLikedPost(false)
@@ -74,9 +76,8 @@ const Blog = () => {
         }
         
         const res = await axiosInstance.put(`${api}blogs/update-reaction`, data)
-        if(res && res.data.status_code == 200){
-            console.log(res.data)
-        }
+        // if(res && res.data.status_code == 200){
+        // }
     }
 
     const handleCommentLike = async (commentId) => {
@@ -98,7 +99,6 @@ const Blog = () => {
         if(res && res.data.status_code == 200){
             setHasLikedComment(false)
         }
-        console.log('cccc')
     }
 
 
@@ -111,16 +111,14 @@ const Blog = () => {
             hasFollowed: !isFollower
         }
         const res = await axiosInstance.put(`${api}user/update-follower`, data)
-        if(res && res.data.data){
-            console.log(res.data.data)
-        }
+        // if(res && res.data.data){
+        // }
     }
 
     const checkIsUserFollowingAuthor = async () => {
         if(blog){
             const res = await axiosInstance.get(`${api}user/profile/${blog?.author._id}`) //get author data
             if(res && res.data.data.status_code == 200){
-                console.log(res.data.data, 'user data ----------')
                 const userId = JSON.parse(localStorage.getItem('user'))?.id //get loggedin user id
                 if(res.data.data.following.includes(userId)){
                     isFollower(true)
@@ -133,20 +131,14 @@ const Blog = () => {
     }
 
     const hasUserLikedComment = (commentId) => {
-        console.log(commentId,'1')
         if(blog){
             const userId = JSON.parse(localStorage.getItem('user'))?.id //get loggedin user id
             const comment = blog?.comments?.filter(c => c._id === commentId)
             if(comment.length){
-                console.log(commentId,'2')
                 if(comment[0].likes.includes(userId)){
-                    // console.log('liked')
-                    console.log(commentId,true)
                     return true
                 }
                 else{
-                    console.log(commentId,false)
-                    // console.log(comment,userId,'not liked')
                     return false
                 }
             }

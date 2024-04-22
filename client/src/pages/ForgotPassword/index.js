@@ -21,7 +21,6 @@ const ForgotPassword = () => {
 
     const handleSubmit = async (values) => {
         const res = await axios.post(api+'auth/forgot-password',values)
-        console.log(res)
         if(res && res.data.status_code == 200){
             toast.success(res.data.message, {
                 theme: 'colored',

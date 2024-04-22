@@ -2,7 +2,6 @@ import axiosInstance from "./axios";
 
 const refreshAccessToken = async (refreshToken) => {
   try {
-    console.log('hit refresh token')
     const refreshToken = localStorage.getItem("refresh_token"); 
     if(!refreshToken) return "No refresh token available"
     const response = await axiosInstance.post("/auth/refresh-token", {
@@ -18,7 +17,6 @@ const refreshAccessToken = async (refreshToken) => {
     // Store the new access token in your application state or localStorage
     // Example: localStorage.setItem("accessToken", newAccessToken);
   } catch (error) {
-    console.log(error, 'errrrrrrrrrr')
     // Handle token refresh error (e.g., log the user out)
     // Example: handleLogout();
 

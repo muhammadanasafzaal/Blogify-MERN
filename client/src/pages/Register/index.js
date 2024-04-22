@@ -36,8 +36,6 @@ const Register = () => {
     }
 
     const handleSubmit = async (values) => {
-        console.log(values);
-        console.log(api)
         dispatch(isLoading(true))
         const res = await axiosInstance.post(api+'auth/register', values)
         if(res && res.data.status_code == 200){

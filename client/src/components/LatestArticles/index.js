@@ -12,7 +12,6 @@ const LatestArticles = () => {
             if (res && res.data) {
                 if (res.data.length) {
                     setBlogs([...res.data])
-                    console.log(res.data)
                 }
             }
         } catch (error) {

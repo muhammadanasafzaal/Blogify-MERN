@@ -32,11 +32,9 @@ const Profile = () => {
     const [avatarPreview, setAvatarPreview] = useState(null)
     const [avatarEdit, setAvatarEdit] = useState(false)
 
-    const [username, setUsername] = useState(null)
     const [tempUsername, setTempUsername] = useState(null)
     const [usernameEdit, setUsernameEdit] = useState(false)
 
-    const [designation, setDesignation] = useState(null)
     const [tempDesignation, setTempDesignation] = useState(null)
     const [designationEdit, setDesignationEdit] = useState(false)
 
@@ -47,55 +45,17 @@ const Profile = () => {
     })
 
     const handleCoverUpload = (e) => {
-        // setProfile({
-        //     ...profile,
-        //     cover:e.target.files[0],
-        // })
         setCoverEdit(true)
         setCoverPreview(URL.createObjectURL(e.target.files[0]))
         setCover(e.target.files[0])
-        console.log(e.target.files[0])
     }
 
-    // const confirmCover = (confirm) => {
-    //     setCoverEdit(false)
-    //     if(confirm){
-    //         if(updateUserProfile('cover', cover)){
-    //             setProfile({...profile, cover:cover})
-    //             console.log(profile.cover)
-    //         }
-    //         else{
-    //             setCoverPreview(typeof profile.cover != 'string' ? URL.createObjectURL(profile.cover) : profile.cover)
-    //         }
-    //     }
-    //     else{
-    //         setCoverPreview(typeof profile.cover != 'string' ? URL.createObjectURL(profile.cover) : profile.cover)
-    //     }
-    // }
 
     const handleAvatarUpload = (e) => {
         setAvatarEdit(true)
         setAvatarPreview(URL.createObjectURL(e.target.files[0]))
         setAvatar(e.target.files[0])
-        console.log(e.target.files[0])
     }
-
-    // const confirmAvatar = (confirm) => {
-    //     setAvatarEdit(false)
-    //     if(confirm){
-    //         if(updateUserProfile('avatar', avatar)){
-    //             setProfile({...profile, avatar:avatar})
-    //             console.log(profile.avatar)
-    //         }
-    //         else{
-    //             setAvatarPreview(typeof profile.avatar != 'string' ? URL.createObjectURL(profile.avatar) : profile.avatar)    
-    //         }
-    //     }
-    //     else{
-    //         setAvatarPreview(typeof profile.avatar != 'string' ? URL.createObjectURL(profile.avatar) : profile.avatar)
-    //     }
-    // }
-
 
     const getUserProfile = async () => {
         const myUserId = JSON.parse(localStorage.getItem('user'))?.id
@@ -103,23 +63,19 @@ const Profile = () => {
         if(userId){
             if(userId == myUserId){
                 setIsExternalUser(false)
-                console.log(userId, myUserId, '1')
                 res = await axiosInstance.get(`${api}user/profile/${myUserId}`)
             }
             else{
                 setIsExternalUser(true)
-                console.log(userId, myUserId, '2')
                 res = await axiosInstance.get(`${api}user/profile/${userId}`)
             }
         }
         else{
             setIsExternalUser(false)
-            console.log(userId, myUserId, '3')
             res = await axiosInstance.get(`${api}user/profile/${myUserId}`)
         }
         dispatch(isLoading(true))
         if(res && res.data.status_code==200){
-            console.log(res.data)
             setProfile({
                 avatar: res.data.data.avatar ? api+res.data.data.avatar : profile.avatar,
                 cover: res.data.data.cover ? api+res.data.data.cover : profile.cover,
@@ -137,13 +93,10 @@ const Profile = () => {
     }
 
     const updateUserProfile = async (key, value) => {
-        // console.log(key, value , 'data to be changed')
         const userId = JSON.parse(localStorage.getItem('user'))?.id
         const data = {}
         data[key] = value
-        console.log(key, value, 'profile update')
         if(key == 'avatar' || key == 'cover'){
-            console.log('hit')
             let formData = new FormData()
             formData.append(key, (key == 'cover') ? cover : avatar)
             // let header = {
@@ -163,7 +116,6 @@ const Profile = () => {
             }
         }
         else{
-            console.log('hit2')
             dispatch(isLoading(true))
             const res = await axiosInstance.put(`${api}user/profile/update/${userId}`,data)
             
@@ -185,21 +137,17 @@ const Profile = () => {
     const handleUsernameEdit = (e) => {
         setUsernameEdit(true)
         setTempUsername(e.target.value)
-        console.log(e.target.value, 'username')  
     }
 
     const handleDesignationEdit = (e) => {
         setDesignationEdit(true)
         setTempDesignation(e.target.value)
-        console.log(e.target.value, 'desig')  
     }
 
     const confirmData = (field, confirm) => {
         if(!field){
             return
         }
-        console.log(field)
-        console.log(cover)
         if(field == 'username'){
             setUsernameEdit(false)
         }
@@ -214,17 +162,13 @@ const Profile = () => {
         }
 
         if(confirm){
-            console.log('change confirmed')
             const data = {}
             data[field] = field == 'username' ? tempUsername : field == 'designation' ? tempDesignation : field == 'avatar' ? avatar : cover
-            console.log(data, 'upload data')
             if(data && data[field]){                
                 if(updateUserProfile(field, data[field])){
                     setProfile({...profile, ...data})
-                    console.log(profile, 'api success')
                 }
                 else{
-                    console.log('api failed')
                     if(field == 'avatar' || field == 'cover'){
                         setAvatarPreview(typeof profile[field] != 'string' ? URL.createObjectURL(profile[field]) : profile[field])
                     }  
@@ -232,7 +176,6 @@ const Profile = () => {
             }
         }
         else{
-            console.log('change cancelled')
             if(field == 'avatar') setAvatarPreview(typeof profile[field] != 'string' ? URL.createObjectURL(profile[field]) : profile[field])
             else setCoverPreview(typeof profile[field] != 'string' ? URL.createObjectURL(profile[field]) : profile[field])
         }

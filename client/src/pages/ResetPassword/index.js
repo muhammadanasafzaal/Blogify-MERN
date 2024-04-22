@@ -43,7 +43,6 @@ const ResetPassword = () => {
         password: values.password
       }
       const res = await axiosInstance.post(api+'auth/reset-password', data)
-      console.log(res)
       if(res && res.data.status_code == 200){
         toast.success(res.data.message, {
           theme:'colored',

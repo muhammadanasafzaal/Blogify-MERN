@@ -3,7 +3,6 @@ import mongoose from "mongoose";
 
 export const getUserProfile = async (req, res) => {
     const { id } = req.params
-    console.log(id)
     try {
         if (id) {
             const user = await User.findOne({
@@ -56,9 +55,6 @@ export const getUserProfile = async (req, res) => {
 export const updateProfile = async (req, res) => {
     // const { id, username, avatar, cover, designation } = req.body
     // const files = req.files
-    console.log(req.body)
-    console.log(req.files, 'cover')
-    console.log(req.params)
     const id = req.params.id
     try {
         if(id){
@@ -70,7 +66,6 @@ export const updateProfile = async (req, res) => {
                 (req.body.username || req.body.designation) ? req.body : 
                 req.files.avatar ? { avatar: req.files.avatar[0].path } : 
                 req.files.cover ? { cover: req.files.cover[0].path } : null
-                // console.log(valuesToUpdate, 'data')
                 await User.findOneAndUpdate({
                     _id: id
                 },
@@ -127,7 +122,6 @@ export const saveUnsaveFollowerForUser = async (req, res) => {
                 })
             }
     
-            console.log(update, 'sasasasas')
             if(update){
                 res.status(200).json({ status_code:200, message: "User followed" })
             }

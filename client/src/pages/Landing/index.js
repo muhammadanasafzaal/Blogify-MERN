@@ -12,7 +12,6 @@ const Landing = () => {
   const api = process.env.REACT_APP_API_KEY
   const dispatch = useDispatch()
   const categories = useSelector((state) => state.blog.blogCategories)
-  console.log(categories, 'cat from store')
 
   // const [headers, setHeaders] = useState({
   //   'Authorization': localStorage.getItem('access_token')
@@ -22,7 +21,6 @@ const Landing = () => {
     if(!categories.length){
       const res = await axiosInstance.get(api+'blogs/categories')
       if(res && res.data.data){
-        console.log(res.data.data)
         dispatch(storeBlogCategories(res.data.data))
       }
     }

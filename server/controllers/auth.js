@@ -27,7 +27,6 @@ export const registerUser = async (req, res) => {
             const existingUser = await User.findOne({
                 email: email
             })
-            console.log(existingUser, 'eu')
             if(existingUser){
                 res.status(200).json({ status_code:400, message: 'Email already registered'})
             }
@@ -37,14 +36,11 @@ export const registerUser = async (req, res) => {
             }
         }
     } catch (error) {
-        console.log(error)
     }
 }
 
 export const loginUser = async (req, res) => {
-    console.log(req.body, 'login')
     const { email, password, rememberMe } = req.body
-    console.log(access_secret,'ssss')
     try {
         if(email && password){
             const user = await User.findOne({
@@ -138,7 +134,6 @@ export const forgotPassword = async (req, res) => {
 
 export const verifyEmail = async (req, res) => {
     const { id, access_token } = req.params
-    console.log(id, access_token, 'reset ')
     try {
         if(id && access_token){
             // res.send('done')
@@ -168,12 +163,10 @@ export const verifyEmail = async (req, res) => {
 
 export const resetPassword = async (req, res) => {
     const { access_token, password } = req.body
-    console.log(access_token, password)
     try {
         if(access_token && password){
             const validUser = jwt.verify(access_token, access_secret)
             if(validUser){
-                console.log(validUser, 'vu')
                 const hashedPw = await bcrypt.hash(password, 10)
                 const updatePw = await User.findOneAndUpdate({
                     _id: validUser.id
@@ -234,7 +227,6 @@ export const updateProfile = async (req, res) => {
 
 export const refreshAccessToken = async (req, res) => {
     const { refreshToken } = req.body
-    console.log(refreshToken, 'rt')
     try {
         if(!refreshToken) return res.sendStatus(401)
         jwt.verify(refreshToken, refresh_secret, (err, user)=>{

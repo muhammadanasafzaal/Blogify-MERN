@@ -44,7 +44,6 @@ function App() {
   }
 
   useEffect(() => {
-    console.log(tk)
     setIsLoggedIn(tk)
   }, [tk])
 

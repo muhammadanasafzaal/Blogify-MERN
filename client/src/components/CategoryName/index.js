@@ -6,9 +6,7 @@ const GetCategoryName = ({ catId }) => {
 
     const [categoryName, setCategoryName] = useState('')
     const getCategoryName = () => {
-        console.log(catId)
         const cName = categories.filter(c => c._id == catId)
-        console.log(cName)
         if(cName.length) setCategoryName(cName[0].name)
     }
 

@@ -32,13 +32,11 @@ axiosInstance.interceptors.request.use(
 // Response interceptor
 axiosInstance.interceptors.response.use(
     (response) => {
-        //   console.log('jwt expired', response)
         return response;
     },
     async (error) => {
         const originalRequest = error.config;
         if (error.response.status === 403 && error.response.data.message === "jwt expired") {
-            // console.log('jwt expired', error.response.data.message)
             //if (!isRefreshing) {
                 //isRefreshing = true;
 
@@ -46,7 +44,6 @@ axiosInstance.interceptors.response.use(
                     const newAccessToken = await refreshAccessToken();
 
                     if (!newAccessToken) {
-                        console.log(newAccessToken, 'refresh resp')
                         localStorage.clear()
                         window.location.href = "http://localhost:3000/login"
                         return

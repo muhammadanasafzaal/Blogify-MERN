@@ -36,7 +36,6 @@ const Login = () => {
 
     const handleSubmit = async (values) => {
         const res = await axiosInstance.post(api+'auth/login',values)
-        console.log(res)
         dispatch(isLoading(true))
         if(res && res.data.status_code == 200){
             dispatch(isLoading(false))

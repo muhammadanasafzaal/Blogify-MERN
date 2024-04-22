@@ -74,8 +74,6 @@ const PostBlog = () => {
             selectedCategories.forEach(c => {
                 values['categories'].push(c._id)
             })
-            console.log(values)
-
             const userId = JSON.parse(localStorage.getItem('user'))?.id
             if (!userId) {
                 return
@@ -117,7 +115,6 @@ const PostBlog = () => {
             return c._id === e.target.value;
         });
         if (idx != -1) {
-            console.log(categories[idx])
             const sidx = selectedCategories.findIndex(sc => {
                 return sc._id === categories[idx]._id
             })
