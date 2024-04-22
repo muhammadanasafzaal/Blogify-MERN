@@ -161,17 +161,17 @@ const Blog = () => {
             blogId: blogId
         }
         if(!info.authorId || !info.comment || !info.blogId) return 
-        setUserComment(values.comment)
+        // return
         dispatch(isLoading(true))
         const res = await axiosInstance.post(api+'blogs/comment/add', info)
-        console.log(res)
+        setUserComment(null)
         if(res && res.data.status_code == 200){
             dispatch(isLoading(false))
             toast.success(res.data.message,{
                 theme:'colored',
                 autoClose: 2000
             });
-            setUserComment(null)
+            setUserComment(values.comment)
         }
         else{
             dispatch(isLoading(false))
@@ -184,7 +184,7 @@ const Blog = () => {
 
     const getBlogComments = async (blogId) => {
         dispatch(isLoading(true))
-        const res = await axiosInstance.get(`${api}blogs/comment/${blogId}`);
+        const res = await axiosInstance.get(`${api}blogs/comments/${blogId}`);
         if (res && res.data.status_code==200) {
             if (res.data.data.length) {
                 dispatch(isLoading(false))

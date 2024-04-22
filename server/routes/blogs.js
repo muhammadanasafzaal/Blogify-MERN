@@ -15,8 +15,8 @@ router.put('/update-reaction', authenticateToken, saveReactionForPost)
 router.delete('/delete-blog/:id', authenticateToken, deleteBlogPost)
 router.post('/comment/add', authenticateToken, saveUserComment)
 router.put('/comment/update-reaction', authenticateToken, saveReactionForComment)
+router.get('/comments/:blog_id', authenticateToken, getCommentsForBlog)
 router.get('/:id?/:title?', authenticateToken, getBlogs)
-router.get('/comment/:blog_id?', authenticateToken, getCommentsForBlog)
 
 
 
